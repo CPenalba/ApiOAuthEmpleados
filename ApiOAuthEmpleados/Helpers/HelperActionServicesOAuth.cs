@@ -11,8 +11,7 @@ namespace ApiOAuthEmpleados.Helpers
         public string Audience { get; set; }
         public string SecretKey { get; set; }
 
-        public HelperActionServicesOAuth
-            (IConfiguration configuration)
+        public HelperActionServicesOAuth(IConfiguration configuration)
         {
             this.Issuer = configuration.GetValue<string>("ApiOAuthToken:Issuer");
             this.Audience = configuration.GetValue<string>("ApiOAuthToken:Audience");
