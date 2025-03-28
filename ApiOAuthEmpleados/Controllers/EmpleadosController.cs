@@ -50,7 +50,7 @@ namespace ApiOAuthEmpleados.Controllers
         {
             string json = HttpContext.User.FindFirst(x => x.Type == "UserData").Value;
             Empleado empleado = JsonConvert.DeserializeObject<Empleado>(json);
-            return await this.repo.GetCompisEmpleadoAsync(empleado.IdEmpleado);
+            return await this.repo.GetCompisEmpleadoAsync(empleado.IdDepartamento);
         }
     }
 }
