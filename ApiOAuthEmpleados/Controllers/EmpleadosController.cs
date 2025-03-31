@@ -52,5 +52,28 @@ namespace ApiOAuthEmpleados.Controllers
             Empleado empleado = JsonConvert.DeserializeObject<Empleado>(json);
             return await this.repo.GetCompisEmpleadoAsync(empleado.IdDepartamento);
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ActionResult<List<string>>> Oficios()
+        {
+            return await this.repo.GetOficiosAsync();
+        }
+
+        //?oficio=ANALISTA&oficio=DIRECTOR
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ActionResult<List<Empleado>>> EmpleadosOficio([FromQuery] List<string> oficio)
+        {
+            return await this.repo.GetEmpleadosByOficiosAsync(oficio);
+        }
+
+        [HttpPut]
+        [Route("[action]/{incremento}")]
+        public async Task<ActionResult> IncrementarSalarios(int incremento, [FromQuery] List<string> oficio)
+        {
+            await this.repo.IncrementarSalariosAsync(incremento, oficio);
+            return Ok();
+        }
     }
 }
