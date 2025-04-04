@@ -38,12 +38,23 @@ namespace ApiOAuthEmpleados.Controllers
                 //DEBEMOS CREAR UNAS CREDENCIALES PARA INCLUIRLAS DENTRO DEL TOKEN Y QUE ESTARAN COMPUESTAS
                 //POR EL SECRET KEY CIFRADO Y EL TIPO DE CIFRADO QUE INCLUIREMOS EN EL TOKEN
                 SigningCredentials credentials = new SigningCredentials(this.helper.GetKeyToken(), SecurityAlgorithms.HmacSha256);
+
+                //CREAMOS EL OBJETO MODEL PARA ALMACENARLO DENTRO DEL TOKEN
+                EmpleadoModel modelEmp = new EmpleadoModel();
+                modelEmp.IdEmpleado = empleado.IdEmpleado;
+                modelEmp.Apellido = empleado.Apellido;
+                modelEmp.Oficio = empleado.Oficio;
+                modelEmp.IdDepartamento = empleado.IdDepartamento;
+
                 //COVERTIMOS A JSON LOS DATOS DEL EMPLEADO
-                string jsonEmpleado = JsonConvert.SerializeObject(empleado);
+                string jsonEmpleado = JsonConvert.SerializeObject(modelEmp);
+                string jsonCifrado = HelperCryptography.EncryptString(jsonEmpleado);
+                //string jsonEmpleado = JsonConvert.SerializeObject(empleado);
                 //CREAMOS UN ARRAY DE CLAIMS
                 Claim[] informacion = new[]
                 {
-                    new Claim("UserData", jsonEmpleado)
+                    //new Claim("UserData", jsonEmpleado)
+                    new Claim("UserData", jsonCifrado)
                 };
 
                 //EL TOKEN SE GENERA CON UNA CLASE Y DEBEMOS INDICAR LOS DATOS QUE ALMACENARA EN SU INTERIOR

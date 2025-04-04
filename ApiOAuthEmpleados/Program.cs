@@ -4,6 +4,9 @@ using ApiOAuthEmpleados.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+HelperCryptography.Initialize(builder.Configuration);
+//INYECTAMOS HTTOCONTEXTACCCESSOR
+builder.Services.AddHttpContextAccessor();
 
 //CREAMOS UNA INSTANCIA DE NUESTRO HELPER
 HelperActionServicesOAuth helper = new HelperActionServicesOAuth(builder.Configuration);
