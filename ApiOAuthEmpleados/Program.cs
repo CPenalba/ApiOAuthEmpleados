@@ -1,7 +1,9 @@
 using ApiOAuthEmpleados.Data;
 using ApiOAuthEmpleados.Helpers;
 using ApiOAuthEmpleados.Repositories;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 HelperCryptography.Initialize(builder.Configuration);
@@ -16,6 +18,16 @@ builder.Services.AddSingleton<HelperActionServicesOAuth>(helper);
 builder.Services.AddAuthentication(helper.GetAuthenticationSchema()).AddJwtBearer(helper.GetJwtBearerOptions());
 
 // Add services to the container.
+builder.Services.AddAzureClients(factory =>
+{
+    factory.AddSecretClient(builder.Configuration.GetSection("KeyVault"));
+});
+
+//YA NO UTILIZAREMOS CONFIGURATION NUNCA MAS
+//NECESITAMOS RECUPERAR EL OBJETO INYECTADO
+SecretClient secretClient = builder.Services.BuildServiceProvider().GetService<SecretClient>();
+KeyVaultSecret secret = await secretClient.GetSecretAsync("SqlAzure");
+
 string connectionString = builder.Configuration.GetConnectionString("SqlAzure");
 builder.Services.AddTransient<RepositoryHospital>();
 builder.Services.AddDbContext<HospitalContext>(options => options.UseSqlServer(connectionString));
